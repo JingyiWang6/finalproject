@@ -11,13 +11,42 @@
 concealed carry associated with changes in the annual age-adjusted
 firearm mortality rate?**
 
-I will combine the course-provided RAND firearm legislation data
-(`gunleg`) with CDC firearm mortality data (`cdcfiremort`). My
-objectives are to describe when states changed their concealed-carry
-policies, summarize geographic and temporal variation in firearm
-mortality, and explore whether mortality patterns differ by policy
-status. I will investigate the association without assuming its
-direction or interpreting it as a causal effect.
+What interests me most is how states differ from one another. I do not
+want to start by assuming that permitless concealed carry is a good or
+bad policy. Instead, I want to see whether states show similar patterns
+or whether a group average hides quite different experiences.
+
+I plan to use the RAND legislation data (`gunleg`) and CDC firearm
+mortality data (`cdcfiremort`) already provided in the course. The
+project will start with two questions: when did states change their
+concealed-carry rules, and what was happening to mortality in those
+states around the same time? The aim is to describe the patterns and
+assess an association, without assuming in advance that the policy
+raises or lowers mortality.
+
+## Reasoning behind the scope
+
+One design choice is to focus on a single policy rather than count all
+firearm laws. A state with more entries in the RAND file is not
+necessarily more restrictive: entries can represent different policies,
+amendments, or replacements. Focusing on permitless concealed carry
+gives the project a clearer comparison, although the legal details will
+still need checking.
+
+A simple comparison of states with and without this policy would be easy
+to plot, but difficult to interpret. The states may already have had
+different mortality rates before adoption. For that reason, the analysis
+will also show each state’s own trajectory, including the years before
+its policy changed. Similar group averages could hide states moving in
+opposite directions. If the trends were already moving apart before
+adoption, that would also change how I interpret a later difference
+between the groups.
+
+There is also a tradeoff in choosing the outcome. Overall firearm
+mortality is available in the course data, but it combines deaths with
+different intents. A pattern in this outcome would not, by itself,
+explain what happened to firearm homicide. That limits the question this
+project can answer.
 
 ## Data sources, population, and feasibility
 
@@ -40,13 +69,11 @@ policy-coding exclusions. I will not interpolate the missing 2006–2013
 period. These checks establish feasibility; they are not findings about
 the research question.
 
-Both datasets are already included among the course examples. I will use
-the bundled snapshots rather than silently substitute newer downloads.
-The final vignettes will record the package version, repository commit,
-file checksums, access date, original source links, and cleaning
-decisions. The RAND documentation page describes an evolving database; I
-will verify the bundled extract’s version and report any uncertainty
-rather than infer its version from the current webpage.
+The analysis will use the bundled snapshots. The final vignettes will
+document the original source links, package version, repository commit,
+file checksums, access date, and cleaning decisions. I will also check
+which RAND database version the bundled extract represents; the version
+on its current webpage may differ.
 
 ## Variables and data preparation
 
@@ -61,18 +88,19 @@ firearm carrying by every resident.
 For the primary coding, a state–year will be exposed (`1`) only when a
 verified qualifying policy covers the entire calendar year. A verified
 year before adoption will be coded `0`. Years containing a policy
-transition will be excluded from the primary comparison to avoid mixing
-exposed and unexposed months. Unresolved histories or ambiguous dates
-will be coded missing, not automatically treated as unexposed. Absence
-of a qualifying record alone will not establish policy absence. A
-sensitivity analysis will use year-end policy status when dates permit
+transition will be excluded from the primary comparison. For example, a
+policy introduced in July should not make the preceding six months count
+as exposed. This choice sacrifices some observations but makes the
+annual groups easier to interpret. Unresolved histories or ambiguous
+dates will be coded missing, not automatically treated as unexposed.
+Absence of a qualifying record alone will not establish policy absence.
+A sensitivity analysis will use year-end policy status when dates permit
 reliable classification.
 
 **Outcome:** `Death.Rate`, a continuous age-adjusted firearm mortality
 rate per 100,000 population. `Deaths.` will provide descriptive counts.
-I will not divide counts by an age-adjusted rate to infer population
-denominators, or describe this outcome as firearm homicide: it covers
-firearm deaths across intents.
+The counts and age-adjusted rates will be kept separate; dividing one by
+the other would not give a valid population denominator.
 
 I will standardize state identifiers, check uniqueness of state–year
 keys, and join the two datasets by state and year. Missing or suppressed
@@ -90,8 +118,9 @@ completeness, and describe variation in concealed-carry policy
 histories. Planned outputs include a table of adoption years, annual
 numbers of states in each verified policy category, and a state-by-year
 policy timeline. Reusable R functions will convert validated policy
-histories into state–year indicators and flag uncertain records. This
-vignette will explain what the legislation data can and cannot measure.
+histories into state–year indicators and flag uncertain records. It will
+also report how many state–years cannot be confidently classified, so
+the final comparison does not hide uncertainty in the policy data.
 
 ### 2. Firearm mortality trends and policy associations
 
@@ -103,27 +132,26 @@ state-by-year mortality heatmap, and descriptive comparisons by policy
 status. Unweighted summaries across states will be labeled as
 state-level summaries, not national population mortality rates.
 
-The main results will be descriptive. If the verified panel has
-sufficient within-state policy changes and usable observations, I will
-also fit an exploratory linear model of mortality rate on policy status
-with state and calendar-year fixed effects. I will report the
-coefficient in deaths per 100,000, uncertainty intervals with standard
-errors clustered by state, and the number of states and transitions
-contributing to the estimate. If the data do not support that model, I
-will retain the descriptive analysis and explain why.
+Descriptive plots and tables will be the main results. If enough states
+have usable observations before and after a policy change, I will also
+try an exploratory linear model with policy status, state fixed effects,
+and calendar-year fixed effects. The report will give the coefficient in
+deaths per 100,000, a confidence interval using standard errors
+clustered by state, and the number of states and policy changes
+contributing to it. A complicated model would not be useful if most of
+the comparison depended on only a few states; in that case, the report
+will explain why the descriptive results are more informative.
 
 ## Confounding, sensitivity analyses, and limitations
 
-Before examining exposure–outcome associations, I identify longstanding
-state differences and common calendar-year shocks as adjustment
-priorities. State fixed effects will account for time-invariant state
-characteristics; year fixed effects will account for shared annual
-changes. Age adjustment is already part of the CDC outcome. Poverty,
-urbanization, firearm ownership, other concurrent policies, and
-state-specific pandemic impacts are plausible time-varying confounders
-not adequately measured in these two datasets. I will explicitly
-identify them as unadjusted limitations rather than claim that fixed
-effects eliminate confounding.
+The adjustment priorities are longstanding differences between states
+and changes affecting the country in the same year. These motivate the
+state and year fixed effects, chosen before examining the
+exposure–outcome association. Age adjustment is already part of the CDC
+outcome. Poverty, urbanization, firearm ownership, other policies, and
+state-specific pandemic impacts could still change over time and
+confound the comparison. The two datasets do not measure these
+adequately, so the report will state that they remain unadjusted.
 
 Sensitivity analyses will compare full-year and year-end exposure
 coding, omit 2020–2021, and examine whether conclusions depend heavily
@@ -141,11 +169,19 @@ reported together in each analysis vignette.
 
 ## Deliverables and workflow
 
-The final deliverable will remain a valid R package and a public pkgdown
-website. In addition to this proposal, it will contain the two
-substantive analysis vignettes, documented helper functions,
-reproducible tables and figures, and R session information. I will first
-validate and document the data, then produce descriptive analyses, and
-finally assess whether the exploratory model is supportable. The README
-will introduce the project and link to its reports. No results will be
-presented as established before the analyses are completed.
+The final deliverable will be a valid R package and public pkgdown
+website with the two analysis vignettes, documented helper functions,
+reproducible tables and figures, and R session information. Work will
+proceed from data checks to descriptive analysis, followed by the
+exploratory model only if the data support it. The README will introduce
+the project and link to the reports. These are plans for the final
+project; the policy–mortality analyses have not yet been completed.
+
+## AI usage disclosure
+
+GPT-6.1 Sol assisted this final project with reference and dataset
+searches, developing and drafting the proposal, revising its wording,
+and setting up the GitHub repository and pkgdown website. The analyses
+described in this proposal are planned work; AI-generated suggestions
+will need to be checked against the source data and course requirements
+as the project develops.

@@ -1,6 +1,6 @@
 # finalproject
 
-A BST260 project exploring the association between permitless
+My BST260 project will be exploring the association between permitless
 concealed-carry policies and state firearm mortality during 2014–2024,
 using course-provided RAND and CDC datasets.
 
