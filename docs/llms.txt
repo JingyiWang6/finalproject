@@ -1,20 +1,11 @@
 # finalproject
 
-Instructions and template for projects for 2026 HSPH BST260
+A BST260 project exploring the association between permitless
+concealed-carry policies and state firearm mortality during 2014–2024,
+using course-provided RAND and CDC datasets.
 
-Your project will be a working GitHub pages site that presents your
-interpretation of features of public health datasets.
-
-Please see
-[instructions](https://vjcitn.github.io/bst260project-template/articles/instructions.html)
-to set up the infrastructure for your project and to learn about
-available datasets
-
-Please see [project suggestion
-text](https://vjcitn.github.io/bst260project-template/articles/stubs.html)
-for some suggestions of how you might proceed with project work on
-selected datasets. More content will be added to this page in the near
-future.
+[Read the project
+proposal](https://jingyiwang6.github.io/finalproject/articles/proposal.html).
 
 # Package index
 
@@ -36,5 +27,7 @@ future.
 
 - [Instructions for BST260 projects,
   2026](https://jingyiwang6.github.io/finalproject/articles/instructions.md):
+- [Project Proposal: Permitless Concealed Carry and Firearm
+  Mortality](https://jingyiwang6.github.io/finalproject/articles/proposal.md):
 - [Stubs for BST260 projects,
   2026](https://jingyiwang6.github.io/finalproject/articles/stubs.md):
